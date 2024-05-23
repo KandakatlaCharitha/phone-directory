@@ -1,40 +1,45 @@
 import React, { Component } from "react";
 import Header from "./Header";
 import "./AddSubscriber.css";
-class AddSusbscriber extends Component {
+import { Link, Navigate } from "react-router-dom";
+
+class AddSubscriber extends Component {
   constructor() {
     super();
     this.state = {
       id: 0,
       name: "",
       phone: "",
+      navigate: false, // Add navigate state
     };
   }
+
   inputChangedHandler = (e) => {
-    const state = this.state;
-    state[e.target.name] = e.target.value;
-    this.setState(state);
+    const { name, value } = e.target;
+    this.setState({ [name]: value });
   };
 
   onFormSubmitted = (e) => {
     e.preventDefault();
     this.props.addSubscriberHandler(this.state);
-    this.setState({ id: 0, name: "", phone: " " });
+    this.setState({ id: 0, name: "", phone: "", navigate: true }); // Set navigate to true
   };
 
   render() {
-    const { name, phone } = this.state;
+    const { name, phone, navigate } = this.state;
+
+    if (navigate) {
+      return <Navigate to="/" />;
+    }
 
     return (
       <div>
         <Header heading="Add Subscriber" />
         <div className="component-body-container">
-          <button className="custom-btn">Back</button>
-
-          <form
-            className="subscriber-form"
-            onSubmit={this.onFormSubmitted.bind(this)}
-          >
+          <Link to="/">
+            <button className="custom-btn">Back</button>
+          </Link>
+          <form className="subscriber-form" onSubmit={this.onFormSubmitted}>
             <label htmlFor="name" className="label-control">
               Name:
             </label>
@@ -44,6 +49,7 @@ class AddSusbscriber extends Component {
               type="text"
               className="input-control"
               name="name"
+              value={name}
               onChange={this.inputChangedHandler}
             />
             <br />
@@ -57,6 +63,7 @@ class AddSusbscriber extends Component {
               type="text"
               className="input-control"
               name="phone"
+              value={phone}
               onChange={this.inputChangedHandler}
             />
             <br />
@@ -81,4 +88,5 @@ class AddSusbscriber extends Component {
     );
   }
 }
-export default AddSusbscriber;
+
+export default AddSubscriber;
